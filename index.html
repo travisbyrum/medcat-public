@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SynapseRx - Drug Interaction Checker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <div class="main-content">
+            <!-- Left Sidebar -->
+            <aside class="sidebar">
+                <!-- SynapseRx Logo -->
+                <div class="sidebar-title">
+                    <img src="./SynapseRX_logo.png" alt="SynapseRx" class="logo">
+                </div>
+
+                <!-- Patient Information -->
+                <section class="sidebar-section">
+                    <h3>Patient Information</h3>
+                    <div class="sidebar-field">
+                        <label for="age">Age:</label>
+                        <input type="number" id="age" placeholder="Years">
+                    </div>
+                    <div class="sidebar-field">
+                        <label for="creatinine">Last Cr:</label>
+                        <input type="number" id="creatinine" step="0.1" placeholder="mg/dL">
+                    </div>
+                    <div class="sidebar-field">
+                        <label for="ast">AST:</label>
+                        <input type="number" id="ast" placeholder="U/L">
+                    </div>
+                    <div class="sidebar-field">
+                        <label for="substances">Substances:</label>
+                        <div class="substances-checkboxes-sidebar">
+                            <label><input type="checkbox" value="alcohol"> Alcohol</label>
+                            <label><input type="checkbox" value="tobacco"> Tobacco</label>
+                            <label><input type="checkbox" value="cannabis"> Cannabis</label>
+                            <label><input type="checkbox" value="caffeine"> Caffeine</label>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- CYP450 Metabolizer Section -->
+                <section class="sidebar-section">
+                    <h3>CYP450 Status</h3>
+                    <div class="cyp450-compact">
+                        <div class="cyp450-compact-field">
+                            <label>CYP1A2:</label>
+                            <select name="cyp1a2" id="cyp1a2">
+                                <option value="poor">Poor</option>
+                                <option value="intermediate">Intermediate</option>
+                                <option value="normal" selected>Normal</option>
+                                <option value="rapid">Rapid</option>
+                                <option value="ultrarapid">Ultrarapid</option>
+                            </select>
+                        </div>
+                        <div class="cyp450-compact-field">
+                            <label>CYP2C9:</label>
+                            <select name="cyp2c9" id="cyp2c9">
+                                <option value="poor">Poor</option>
+                                <option value="intermediate">Intermediate</option>
+                                <option value="normal" selected>Normal</option>
+                                <option value="rapid">Rapid</option>
+                                <option value="ultrarapid">Ultrarapid</option>
+                            </select>
+                        </div>
+                        <div class="cyp450-compact-field">
+                            <label>CYP2C19:</label>
+                            <select name="cyp2c19" id="cyp2c19">
+                                <option value="poor">Poor</option>
+                                <option value="intermediate">Intermediate</option>
+                                <option value="normal" selected>Normal</option>
+                                <option value="rapid">Rapid</option>
+                                <option value="ultrarapid">Ultrarapid</option>
+                            </select>
+                        </div>
+                        <div class="cyp450-compact-field">
+                            <label>CYP2D6:</label>
+                            <select name="cyp2d6" id="cyp2d6">
+                                <option value="poor">Poor</option>
+                                <option value="intermediate">Intermediate</option>
+                                <option value="normal" selected>Normal</option>
+                                <option value="rapid">Rapid</option>
+                                <option value="ultrarapid">Ultrarapid</option>
+                            </select>
+                        </div>
+                        <div class="cyp450-compact-field">
+                            <label>CYP3A4/5:</label>
+                            <select name="cyp3a4" id="cyp3a4">
+                                <option value="poor">Poor</option>
+                                <option value="intermediate">Intermediate</option>
+                                <option value="normal" selected>Normal</option>
+                                <option value="rapid">Rapid</option>
+                                <option value="ultrarapid">Ultrarapid</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+            </aside>
+
+            <!-- Main Content Area -->
+            <div class="content-area">
+                <!-- Medication Input Section -->
+                <section class="medication-input-top">
+                    <div class="input-container">
+                        <input type="text" id="medicationInput" placeholder="Enter medication name...">
+                        <button id="addMedication">Add Medication</button>
+                    </div>
+                    <div class="selected-medications">
+                        <h3>Selected Medications:</h3>
+                        <ul id="medicationList"></ul>
+                    </div>
+                </section>
+
+                <!-- Drug Interaction Ring and Info -->
+                <div class="interaction-layout">
+                    <div class="ring-container">
+                        <svg id="drugRing" width="700" height="700" viewBox="0 0 800 800">
+                            <!-- Ring will be drawn here by JavaScript -->
+                        </svg>
+                    </div>
+                    <div class="interaction-info">
+                        <div class="tab-container">
+                            <div class="tab-buttons">
+                                <button class="tab-button active" onclick="switchTab('interactions')">Drug Interactions</button>
+                                <button class="tab-button" onclick="switchTab('sideEffects')">Side Effects</button>
+                            </div>
+                            <div class="tab-content">
+                                <div id="interactionsTab" class="tab-pane active">
+                                    <div id="interactionDetails"></div>
+                                </div>
+                                <div id="sideEffectsTab" class="tab-pane">
+                                    <div id="sideEffectsTable"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Disclaimer -->
+        <footer class="disclaimer">
+            Demo for informational purposes only; not clinically validated
+        </footer>
+    </div>
+
+    <!-- Drug Info Popup -->
+    <div id="drugPopup" class="drug-popup">
+        <div class="drug-popup-title" id="drugPopupTitle"></div>
+        <div class="drug-popup-section">
+            <span class="drug-popup-label">MOA:</span>
+            <span class="drug-popup-content" id="drugPopupMOA"></span>
+        </div>
+        <div class="drug-popup-section">
+            <span class="drug-popup-label">Indications:</span>
+            <span class="drug-popup-content" id="drugPopupIndications"></span>
+        </div>
+        <div class="drug-popup-section">
+            <span class="drug-popup-label">Dosing:</span>
+            <span class="drug-popup-content" id="drugPopupDosing"></span>
+        </div>
+        <div class="drug-popup-section">
+            <span class="drug-popup-label">Side Effects:</span>
+            <span class="drug-popup-content" id="drugPopupSideEffects"></span>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
